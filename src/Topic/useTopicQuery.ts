@@ -4,9 +4,9 @@ import { TopicInfo, TopicOpenInfo } from "../types";
 
 /**
  *
- * If the topic is "isOpen" the we want to mark the query as
+ * If the topic is "open" then we want to mark the query as
  * fresh by setting stateTime to the highest level. That way
- * it won't refresh while you read the topics.
+ * it won't refresh while users read topics.
  */
 function useTopicQuery(topic: TopicInfo, isOpen: boolean) {
   return useQuery<TopicOpenInfo>(
