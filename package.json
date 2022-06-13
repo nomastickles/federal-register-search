@@ -1,6 +1,6 @@
 {
-  "name": "federal-register-surfing",
-  "homepage": "https://nomastickles.github.io/federal-register-surfing/",
+  "name": "federal-register-search",
+  "homepage": "https://nomastickles.github.io/federal-register-search/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
