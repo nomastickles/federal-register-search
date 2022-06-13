@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/federal-register-surfing/static/css/main.d610b478.css",
+    "main.js": "/federal-register-surfing/static/js/main.8c36a340.js",
+    "static/js/787.3ace9c9a.chunk.js": "/federal-register-surfing/static/js/787.3ace9c9a.chunk.js",
+    "index.html": "/federal-register-surfing/index.html",
+    "main.d610b478.css.map": "/federal-register-surfing/static/css/main.d610b478.css.map",
+    "main.8c36a340.js.map": "/federal-register-surfing/static/js/main.8c36a340.js.map",
+    "787.3ace9c9a.chunk.js.map": "/federal-register-surfing/static/js/787.3ace9c9a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d610b478.css",
+    "static/js/main.8c36a340.js"
+  ]
+}
