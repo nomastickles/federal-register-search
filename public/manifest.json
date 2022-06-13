@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "federal-register-search",
+  "name": "federal-register-search",
   "icons": [
     {
       "src": "favicon.ico",
