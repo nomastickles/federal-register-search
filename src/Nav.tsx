@@ -1,17 +1,25 @@
 import React from "react";
-import { Minimize, Edit, X, HelpCircle } from "react-feather";
-import { DispatchContext, StateContext } from "./context";
+import {
+  ArrowLeftCircle as BackIcon,
+  Edit,
+  X,
+  HelpCircle,
+  Save,
+} from "react-feather";
 import { actions } from "./slice";
 import { Step } from "./types";
+import { useAppState } from "./hooks/useAppState";
+import { useDispatch } from "./hooks/useDispatch";
+
+const iconSize = 62;
+const questionSize = 28;
 
 function Nav() {
-  const { stepMap } = React.useContext(StateContext);
+  const { stepMap } = useAppState();
+  const dispatch = useDispatch();
   const currentTopicEditId = stepMap[Step.EDIT_TOPIC];
   const currentTopicId = stepMap[Step.OPEN_TOPIC];
   const showInfo = stepMap[Step.SHOW_INFO];
-  const dispatch = React.useContext(DispatchContext);
-
-  const iconSize = 62;
 
   const backToGrid = React.useCallback(() => {
     dispatch(
@@ -27,6 +35,24 @@ function Nav() {
       })
     );
   }, [dispatch]);
+
+  const clearEdit = React.useCallback(() => {
+    dispatch(
+      actions.setStepValue({
+        step: Step.EDIT_TOPIC,
+        clearStep: true,
+      })
+    );
+  }, [dispatch]);
+
+  const updateTopic = React.useCallback(() => {
+    dispatch(
+      actions.setStepValue({
+        step: Step.TOPIC_UPDATE,
+        value: currentTopicEditId,
+      })
+    );
+  }, [dispatch, currentTopicEditId]);
 
   const editToggle = React.useCallback(() => {
     if (currentTopicEditId) {
@@ -68,9 +94,9 @@ function Nav() {
   return (
     <div className="nav">
       {showInfo && (
-        <h3 className="" style={{ margin: "0 0 0 0", lineHeight: "1em" }}>
-          This is a simple tool for searching:
-          <br />
+        <h3 className="" style={{ margin: "0 0 0 0", lineHeight: "1.3em" }}>
+          Searching
+          <span> </span>
           <a
             href="https://www.federalregister.gov/developers/documentation/api/v1#/Federal%20Register%20Documents/get_documents__format_"
             target="_blank"
@@ -78,24 +104,43 @@ function Nav() {
           >
             federalregister.gov
           </a>
+          <span> via </span>
+          <a
+            href="https://github.com/nomastickles/federal-register-search"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            github.com/nomastickles/federal-register-search
+          </a>
           <div className="nav-x-info nav-icon" onClick={infoToggle}>
-            <X width={52} height={52} />
+            <X width={questionSize} height={questionSize} />
           </div>
         </h3>
       )}
 
       {!showInfo && !currentTopicId && (
         <div className="nav-question nav-icon" onClick={infoToggle}>
-          <HelpCircle width={36} height={36} />
+          <HelpCircle width={questionSize} height={questionSize} />
         </div>
       )}
       {!!currentTopicId && !currentTopicEditId && (
         <>
-          <div className="nav-edit nav-icon" onClick={editToggle}>
+          <div className="nav-edit nav-icon button-color" onClick={editToggle}>
             <Edit width={iconSize} height={iconSize} />
           </div>
-          <div className="nav-close nav-icon" onClick={backToGrid}>
-            <Minimize width={iconSize} height={iconSize} />
+          <div className="nav-close nav-icon button-color" onClick={backToGrid}>
+            <BackIcon width={iconSize} height={iconSize} />
+          </div>
+        </>
+      )}
+
+      {!!currentTopicId && !!currentTopicEditId && (
+        <>
+          <div className="nav-edit nav-icon button-color" onClick={updateTopic}>
+            <Save width={iconSize} height={iconSize} />
+          </div>
+          <div className="nav-close nav-icon button-color" onClick={clearEdit}>
+            <BackIcon width={iconSize} height={iconSize} />
           </div>
         </>
       )}

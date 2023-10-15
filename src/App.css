@@ -71,7 +71,7 @@ a:hover {
 .nav {
   /* height: 4%; */
 
-  padding: 10px 0 0 20px;
+  padding: 5px 0 0 5px;
 }
 
 .nav-x-info {
@@ -81,8 +81,8 @@ a:hover {
 }
 
 .nes {
-  font-family: 'Press Start 2P';
   font-weight: 100;
+  font-size: 1.4em;
 }
 
 .nes-container {
@@ -100,11 +100,14 @@ a:hover {
   bottom: 10px;
 }
 
+.button-color {
+  color: #ffffff;
+}
 .nav .nav-question {
   z-index: 100000;
   position: fixed;
-  top: 6px;
-  right: 6px;
+  top: 3px;
+  right: 3px;
 }
 
 .nav .nav-edit {
@@ -116,8 +119,8 @@ a:hover {
 
 .loading {
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
   border: 6px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
   border-top-color: #fff;

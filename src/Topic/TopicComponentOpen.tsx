@@ -1,7 +1,7 @@
 import React from "react";
-import { TopicOpenInfo } from "../types";
+import { TopicOpen } from "../types";
 
-function TopicOpen({ info }: { info: TopicOpenInfo }) {
+function TopicComponentOpen({ info }: { info: TopicOpen }) {
   return (
     <div>
       <h2>{info.description}</h2>
@@ -32,4 +32,4 @@ function TopicOpen({ info }: { info: TopicOpenInfo }) {
   );
 }
 
-export default TopicOpen;
+export default TopicComponentOpen;

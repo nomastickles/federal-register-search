@@ -1,16 +1,16 @@
-import React from "react";
-
 import "./App.css";
-import { DispatchContext, StateContext } from "./context";
 import Nav from "./Nav";
 
 import { actions } from "./slice";
-import Topic from "./Topic/Topic";
+import { TopicComponent } from "./Topic/TopicComponent";
 import { Step } from "./types";
+import { useDispatch } from "./hooks/useDispatch";
+import { useAppState } from "./hooks/useAppState";
+import React from "react";
 
 function App() {
-  const dispatch = React.useContext(DispatchContext);
-  const { topics, stepMap } = React.useContext(StateContext);
+  const dispatch = useDispatch();
+  const { topics, stepMap } = useAppState();
   const currentTopicId = stepMap[Step.OPEN_TOPIC];
   const isTopicOpened = !!currentTopicId;
   const backgroundClassName = `bl-main ${
@@ -37,19 +37,19 @@ function App() {
     <div className="container">
       <Nav />
       <div id="bl-main" className={backgroundClassName}>
-        {topics.map((item) => {
+        {topics.map((topic) => {
           const sectionClassName = `${
-            currentTopicId === item.id ? "bl-expand bl-expand-top" : ""
+            currentTopicId === topic.id ? "bl-expand bl-expand-top" : ""
           }`;
 
           return (
             <section
-              key={item.id}
-              style={{ background: item.backgroundColor }}
-              onClick={() => onSectionClick(item.id)}
+              key={topic.id}
+              style={{ background: topic.backgroundColor }}
+              onClick={() => onSectionClick(topic.id)}
               className={sectionClassName}
             >
-              <Topic topic={item} />
+              <TopicComponent item={topic} key={topic.id} />
             </section>
           );
         })}

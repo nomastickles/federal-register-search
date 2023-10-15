@@ -1,0 +1,24 @@
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    env:
+      GENERATE_SOURCEMAP: false
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 16
+    - name: deploy
+      run: |
+        yarn install
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY
+        yarn deploy

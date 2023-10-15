@@ -1,33 +1,27 @@
 {
   "name": "federal-register-search",
+  "author": "nomastickles",
   "homepage": "https://nomastickles.github.io/federal-register-search/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@reduxjs/toolkit": "^1.8.2",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^13.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^27.0.1",
-    "@types/node": "^16.7.13",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "axios": "^0.27.2",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
+    "@reduxjs/toolkit": "^1.9.7",
+    "axios": "^1.5.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-feather": "^2.0.10",
-    "react-hook-form": "^7.32.0",
-    "react-query": "^3.39.1",
+    "react-hook-form": "^7.47.0",
+    "react-kawaii": "^0.18.0",
+    "react-query": "^3.39.3",
     "react-scripts": "5.0.1",
-    "typescript": "^4.4.2",
-    "web-vitals": "^2.1.0"
+    "typescript": "^5.2.2",
+    "web-vitals": "^3.5.0"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "PORT=3333 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build -u 'github-actions-bot <support+actions@github.com>'"
   },
   "eslintConfig": {
     "extends": [
@@ -48,6 +42,14 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^4.0.0"
+    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.5.1",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.8.6",
+    "@types/react": "^18.2.28",
+    "@types/react-dom": "^18.2.13",
+    "@types/react-kawaii": "^0.17.1",
+    "gh-pages": "^6.0.0"
   }
 }
