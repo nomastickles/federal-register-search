@@ -21,7 +21,7 @@
     "start": "PORT=3333 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "deploy": "gh-pages -d build -u 'github-actions-bot <support+actions@github.com>'"
+    "deploy": "yarn build && gh-pages -d build -u 'github-actions-bot <support+actions@github.com>'"
   },
   "eslintConfig": {
     "extends": [
