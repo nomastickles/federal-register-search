@@ -1,15 +1,12 @@
 {
   "files": {
-    "main.css": "/federal-register-search/static/css/main.d610b478.css",
-    "main.js": "/federal-register-search/static/js/main.bcdd204f.js",
-    "static/js/787.8e2ebcad.chunk.js": "/federal-register-search/static/js/787.8e2ebcad.chunk.js",
-    "index.html": "/federal-register-search/index.html",
-    "main.d610b478.css.map": "/federal-register-search/static/css/main.d610b478.css.map",
-    "main.bcdd204f.js.map": "/federal-register-search/static/js/main.bcdd204f.js.map",
-    "787.8e2ebcad.chunk.js.map": "/federal-register-search/static/js/787.8e2ebcad.chunk.js.map"
+    "main.css": "/federal-register-search/static/css/main.ffe9019e.css",
+    "main.js": "/federal-register-search/static/js/main.58d34435.js",
+    "static/js/522.2aebbad7.chunk.js": "/federal-register-search/static/js/522.2aebbad7.chunk.js",
+    "index.html": "/federal-register-search/index.html"
   },
   "entrypoints": [
-    "static/css/main.d610b478.css",
-    "static/js/main.bcdd204f.js"
+    "static/css/main.ffe9019e.css",
+    "static/js/main.58d34435.js"
   ]
 }
