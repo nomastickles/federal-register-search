@@ -4,9 +4,11 @@
 
 ## api - [https://federalregister.gov](https://www.federalregister.gov/developers/documentation/api/v1)
 
-## packages - react-query + redux-toolkit + react-hook-form
+## redux-toolkit + useContext + useReducer = ❤️‍🔥
 
 ![img3](img/img3.png)
 ![img2](img/img2.png)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+```bash
+yarn install && yarn start
+```
