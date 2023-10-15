@@ -6,9 +6,6 @@
 
 ## redux-toolkit + useContext + useReducer = ❤️‍🔥
 
-![img3](img/img3.png)
-![img2](img/img2.png)
-
 ```bash
 yarn install && yarn start
 ```
