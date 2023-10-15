@@ -5,16 +5,20 @@ import TopicComponentOpen from "./TopicComponentOpen";
 import { Illustration } from "./Illustrations";
 import { useAppState } from "../hooks/useAppState";
 import axios from "axios";
+import { actions } from "../slice";
+import { useDispatch } from "../hooks/useDispatch";
 
 /**
  * main component
  */
-function TopicComponentInner({ item: topic }: { item: Topic }) {
+export function TopicComponent({ item: topic }: { item: Topic }) {
   const { stepMap } = useAppState();
+  const dispatch = useDispatch();
   const [data, setData] = React.useState<TopicOpen | undefined>(undefined);
   const [hasError, setHasError] = React.useState<boolean>(false);
   const currentTopicOpenId = stepMap[Step.OPEN_TOPIC];
   const currentTopicEditId = stepMap[Step.EDIT_TOPIC];
+  const topicUpdatedId = stepMap[Step.TOPIC_UPDATE];
 
   const isLoading = !data;
 
@@ -40,12 +44,26 @@ function TopicComponentInner({ item: topic }: { item: Topic }) {
     fetchData(topic)
       .then((results) => {
         setData(results);
+
+        if (!topicUpdatedId) {
+          return;
+        }
+
+        // topic was updated let's go read some articles
+        setTimeout(() => {
+          dispatch(
+            actions.setStepValue({
+              step: Step.OPEN_TOPIC,
+              value: topicUpdatedId,
+            })
+          );
+        }, 1000);
       })
       .catch(() => {
         setHasError(true);
       })
       .finally(() => {});
-  }, [fetchData, topic]);
+  }, [fetchData, topic, topicUpdatedId, dispatch]);
 
   if (!topic) return null;
 
@@ -123,5 +141,3 @@ function formatTopicIntro(item: TopicOpen, isPres: boolean) {
     </div>
   );
 }
-
-export const TopicComponent = React.memo(TopicComponentInner);

@@ -52,8 +52,6 @@ function TopicForm({ topic }: { topic: Topic }) {
     if (!shouldUpdateTopic) {
       return;
     }
-    console.log("🌈");
-
     const newItem = {
       ...topic,
       topicSections: newSections,
