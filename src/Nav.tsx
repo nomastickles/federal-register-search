@@ -17,20 +17,20 @@ const questionSize = 28;
 function Nav() {
   const { stepMap } = useAppState();
   const dispatch = useDispatch();
-  const currentTopicEditId = stepMap[Step.EDIT_TOPIC];
-  const currentTopicId = stepMap[Step.OPEN_TOPIC];
+  const currentTopicEditId = stepMap[Step.TOPIC_EDIT];
+  const currentTopicId = stepMap[Step.TOPIC_OPEN];
   const showInfo = stepMap[Step.SHOW_INFO];
 
   const backToGrid = React.useCallback(() => {
     dispatch(
       actions.setStepValue({
-        step: Step.OPEN_TOPIC,
+        step: Step.TOPIC_OPEN,
         clearStep: true,
       })
     );
     dispatch(
       actions.setStepValue({
-        step: Step.EDIT_TOPIC,
+        step: Step.TOPIC_EDIT,
         clearStep: true,
       })
     );
@@ -39,7 +39,7 @@ function Nav() {
   const clearEdit = React.useCallback(() => {
     dispatch(
       actions.setStepValue({
-        step: Step.EDIT_TOPIC,
+        step: Step.TOPIC_EDIT,
         clearStep: true,
       })
     );
@@ -58,7 +58,7 @@ function Nav() {
     if (currentTopicEditId) {
       dispatch(
         actions.setStepValue({
-          step: Step.EDIT_TOPIC,
+          step: Step.TOPIC_EDIT,
           clearStep: true,
         })
       );
@@ -67,7 +67,7 @@ function Nav() {
 
     dispatch(
       actions.setStepValue({
-        step: Step.EDIT_TOPIC,
+        step: Step.TOPIC_EDIT,
         value: currentTopicId,
       })
     );

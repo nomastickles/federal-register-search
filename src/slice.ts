@@ -19,9 +19,9 @@ const { actions, reducer } = createSlice({
       const index = state.topics.findIndex((i) => i.id === payload.id);
       state.topics[index] = payload;
       setTopicLocalStorage(payload);
-      state.stepMap[Step.EDIT_TOPIC] = undefined;
-      state.stepMap[Step.OPEN_TOPIC] = undefined;
+      state.stepMap[Step.TOPIC_EDIT] = undefined;
       state.stepMap[Step.TOPIC_UPDATE] = undefined;
+      // state.stepMap[Step.TOPIC_OPEN] = undefined;
     },
     setStepValue: (state, { payload }: PayloadAction<SetStep>) => {
       let newValue = payload.clearStep ? undefined : Date.now();

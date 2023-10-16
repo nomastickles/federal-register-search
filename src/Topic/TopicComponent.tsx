@@ -4,66 +4,22 @@ import TopicForm from "./TopicComponentForm";
 import TopicComponentOpen from "./TopicComponentOpen";
 import { Illustration } from "./Illustrations";
 import { useAppState } from "../hooks/useAppState";
-import axios from "axios";
-import { actions } from "../slice";
-import { useDispatch } from "../hooks/useDispatch";
+import useTopicQuery from "../hooks/useTopicQuery";
 
 /**
  * main component
  */
 export function TopicComponent({ item: topic }: { item: Topic }) {
   const { stepMap } = useAppState();
-  const dispatch = useDispatch();
-  const [data, setData] = React.useState<TopicOpen | undefined>(undefined);
-  const [hasError, setHasError] = React.useState<boolean>(false);
-  const currentTopicOpenId = stepMap[Step.OPEN_TOPIC];
-  const currentTopicEditId = stepMap[Step.EDIT_TOPIC];
-  const topicUpdatedId = stepMap[Step.TOPIC_UPDATE];
+  const currentTopicOpenId = stepMap[Step.TOPIC_OPEN];
+  const currentTopicEditId = stepMap[Step.TOPIC_EDIT];
 
-  const isLoading = !data;
+  const { isLoading, data, error } = useTopicQuery(
+    topic,
+    currentTopicOpenId === topic.id
+  );
 
-  const fetchData = React.useCallback(async (topicToLookup: Topic) => {
-    const url = "https://www.federalregister.gov/api/v1/documents.json";
-    const params = {
-      per_page: 20, // doesn't seem to go lower
-      order: "newest",
-      "conditions[sections]": topicToLookup.topicSections,
-      "conditions[term]": topicToLookup.searchWords,
-      "conditions[type]": topicToLookup.presidential ? ["PRESDOCU"] : undefined,
-    };
-
-    const results = await axios.get<TopicOpen>(url, {
-      params,
-    });
-
-    return results.data;
-  }, []);
-
-  React.useEffect(() => {
-    if (!topic) return;
-    fetchData(topic)
-      .then((results) => {
-        setData(results);
-
-        if (!topicUpdatedId) {
-          return;
-        }
-
-        // topic was updated let's go read some articles
-        setTimeout(() => {
-          dispatch(
-            actions.setStepValue({
-              step: Step.OPEN_TOPIC,
-              value: topicUpdatedId,
-            })
-          );
-        }, 1000);
-      })
-      .catch(() => {
-        setHasError(true);
-      })
-      .finally(() => {});
-  }, [fetchData, topic, topicUpdatedId, dispatch]);
+  const hasError = !!error;
 
   if (!topic) return null;
 

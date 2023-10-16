@@ -11,7 +11,7 @@ import React from "react";
 function App() {
   const dispatch = useDispatch();
   const { topics, stepMap } = useAppState();
-  const currentTopicId = stepMap[Step.OPEN_TOPIC];
+  const currentTopicId = stepMap[Step.TOPIC_OPEN];
   const isTopicOpened = !!currentTopicId;
   const backgroundClassName = `bl-main ${
     isTopicOpened ? "bl-expand-item" : ""
@@ -25,7 +25,7 @@ function App() {
     (id: number) => {
       dispatch(
         actions.setStepValue({
-          step: Step.OPEN_TOPIC,
+          step: Step.TOPIC_OPEN,
           value: id,
         })
       );
