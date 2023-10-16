@@ -4,7 +4,7 @@
 
 ## [https://federalregister.gov](https://www.federalregister.gov/developers/documentation/api/v1)
 
-## redux-toolkit + useContext + useReducer = ❤️‍🔥
+## useContext + useReducer + redux-toolkit + react-query = ❤️‍🔥
 
 ```bash
 yarn install && yarn start
