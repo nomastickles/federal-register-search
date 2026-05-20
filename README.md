@@ -47,7 +47,6 @@ Then wire it into your client:
 
 - [**JamesANZ/us-legal-mcp**](https://github.com/JamesANZ/us-legal-mcp) — broader legal MCP that bundles Federal Register search alongside Congress.gov bills and CourtListener opinions.
 - [**lzinga/us-gov-open-data-mcp**](https://github.com/lzinga/us-gov-open-data-mcp) — kitchen-sink server covering 40+ U.S. government APIs (Treasury, FRED, FDA, CDC, FEC, etc.) including Federal Register.
-- [**beshkenadze/us-legal-tools**](https://github.com/beshkenadze/us-legal-tools) — alternative legal-tools MCP.
 
 ### Direct API (no MCP)
 
