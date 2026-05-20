@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.css": "/federal-register-search/static/css/main.ffe9019e.css",
-    "main.js": "/federal-register-search/static/js/main.1179b8f8.js",
+    "main.css": "/federal-register-search/static/css/main.f412ac8c.css",
+    "main.js": "/federal-register-search/static/js/main.f7cf2ffa.js",
     "static/js/27.97b40d64.chunk.js": "/federal-register-search/static/js/27.97b40d64.chunk.js",
     "index.html": "/federal-register-search/index.html"
   },
   "entrypoints": [
-    "static/css/main.ffe9019e.css",
-    "static/js/main.1179b8f8.js"
+    "static/css/main.f412ac8c.css",
+    "static/js/main.f7cf2ffa.js"
   ]
 }
