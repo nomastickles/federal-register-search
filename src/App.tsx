@@ -5,7 +5,7 @@ import {
   DndContext,
   DragEndEvent,
   closestCenter,
-  PointerSensor,
+  MouseSensor,
   TouchSensor,
   KeyboardSensor,
   useSensor,
@@ -47,18 +47,19 @@ function App() {
     dispatch(actions.addTopic());
   }, [dispatch]);
 
-  // dnd-kit sensors:
-  // - PointerSensor (mouse/trackpad): require small drag movement before
-  //   activating so a normal click still fires a click event on the card.
-  // - TouchSensor (mobile): require a 220ms hold-still long-press before
-  //   dragging, so a quick tap opens the topic and a hold drags it.
+  // dnd-kit sensors — keep mouse and touch separate so they don't fight
+  // for the same events (PointerSensor sees touch as a pointer event and
+  // beats TouchSensor's delay activation, which kills mobile drag).
+  // - MouseSensor: small movement before activating, so clicks still fire.
+  // - TouchSensor: long-press hold (220ms) before activating, so taps still
+  //   open the topic and finger-scrolling still scrolls the list.
   // - KeyboardSensor: arrow-key reorder for accessibility.
   const sensors = useSensors(
-    useSensor(PointerSensor, {
+    useSensor(MouseSensor, {
       activationConstraint: { distance: 6 },
     }),
     useSensor(TouchSensor, {
-      activationConstraint: { delay: 220, tolerance: 6 },
+      activationConstraint: { delay: 220, tolerance: 8 },
     }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,

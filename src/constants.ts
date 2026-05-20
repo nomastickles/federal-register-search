@@ -55,7 +55,7 @@ export function getTopicDefaults(): Topic[] {
       topicSections: [],
     },
     {
-      searchWords: ["agents", "ai", "governance"],
+      searchWords: ["ai", "governance"],
       presidential: false,
       topicSections: [],
     },
