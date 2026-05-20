@@ -3,12 +3,18 @@ import { useQuery } from "react-query";
 import { Topic, TopicOpen } from "../types";
 
 /**
- *
  * If the topic is "open" then we want to mark the query as
- * fresh by setting stateTime to the highest level. That way
+ * fresh by setting staleTime to the highest level. That way
  * it won't refresh while users read topics.
+ *
+ * If a topic has no searchWords AND no sections, we skip the request
+ * entirely — there's nothing to ask the API for (an empty filter would
+ * otherwise return everything in the Federal Register).
  */
 function useTopicQuery(topic: Topic, isOpen: boolean) {
+  const hasQuery =
+    topic.searchWords.length > 0 || topic.topicSections.length > 0;
+
   return useQuery<TopicOpen>(
     `${topic.searchWords.join("")}${topic.topicSections.join("")}${
       topic.presidential ? "presidential" : ""
@@ -32,6 +38,7 @@ function useTopicQuery(topic: Topic, isOpen: boolean) {
       };
     },
     {
+      enabled: hasQuery,
       staleTime: isOpen ? Infinity : undefined,
     }
   );

@@ -4,6 +4,8 @@ export enum Step {
   TOPIC_EDIT = "TOPIC_EDIT",
   TOPIC_OPEN = "TOPIC_OPEN",
   TOPIC_UPDATE = "TOPIC_UPDATE",
+  TOPIC_ADD = "TOPIC_ADD",
+  TOPIC_DELETE = "TOPIC_DELETE",
 }
 
 export interface SetStep {

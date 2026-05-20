@@ -1,110 +1,66 @@
 import React from "react";
-import {
-  ArrowLeftCircle as BackIcon,
-  Edit,
-  X,
-  HelpCircle,
-  Save,
-} from "react-feather";
+import { HelpCircle, X } from "react-feather";
 import { actions } from "./slice";
 import { Step } from "./types";
 import { useAppState } from "./hooks/useAppState";
 import { useDispatch } from "./hooks/useDispatch";
 
-const iconSize = 62;
-const questionSize = 28;
-
-function Nav() {
+/**
+ * Masthead — shown at the top of the topic list view. Just a title +
+ * info toggle. Topic-open / edit views have their own headers inside
+ * TopicOpenLayer so the buttons can be context-aware.
+ */
+function Masthead() {
   const { stepMap } = useAppState();
   const dispatch = useDispatch();
-  const currentTopicEditId = stepMap[Step.TOPIC_EDIT];
-  const currentTopicId = stepMap[Step.TOPIC_OPEN];
   const showInfo = stepMap[Step.SHOW_INFO];
 
-  const backToGrid = React.useCallback(() => {
-    dispatch(
-      actions.setStepValue({
-        step: Step.TOPIC_OPEN,
-        clearStep: true,
-      })
-    );
-    dispatch(
-      actions.setStepValue({
-        step: Step.TOPIC_EDIT,
-        clearStep: true,
-      })
-    );
-  }, [dispatch]);
+  const dateLabel = React.useMemo(() => {
+    return new Date().toLocaleDateString(undefined, {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+    });
+  }, []);
 
-  const clearEdit = React.useCallback(() => {
-    dispatch(
-      actions.setStepValue({
-        step: Step.TOPIC_EDIT,
-        clearStep: true,
-      })
-    );
-  }, [dispatch]);
-
-  const updateTopic = React.useCallback(() => {
-    dispatch(
-      actions.setStepValue({
-        step: Step.TOPIC_UPDATE,
-        value: currentTopicEditId,
-      })
-    );
-  }, [dispatch, currentTopicEditId]);
-
-  const editToggle = React.useCallback(() => {
-    if (currentTopicEditId) {
-      dispatch(
-        actions.setStepValue({
-          step: Step.TOPIC_EDIT,
-          clearStep: true,
-        })
-      );
-      return;
-    }
-
-    dispatch(
-      actions.setStepValue({
-        step: Step.TOPIC_EDIT,
-        value: currentTopicId,
-      })
-    );
-  }, [currentTopicEditId, dispatch, currentTopicId]);
-
-  const infoToggle = React.useCallback(() => {
-    if (showInfo) {
-      dispatch(
-        actions.setStepValue({
-          step: Step.SHOW_INFO,
-          clearStep: true,
-        })
-      );
-      return;
-    }
-
+  const toggleInfo = React.useCallback(() => {
     dispatch(
       actions.setStepValue({
         step: Step.SHOW_INFO,
-      })
+        clearStep: !!showInfo,
+      }),
     );
-  }, [showInfo, dispatch]);
+  }, [dispatch, showInfo]);
 
   return (
-    <div className="nav">
-      {showInfo && (
-        <h3 className="" style={{ margin: "0 0 0 0", lineHeight: "1.3em" }}>
-          Searching
-          <span> </span>
+    <>
+      <div className="masthead">
+        <div>
+          <div className="masthead-eyebrow">{dateLabel}</div>
+          <h1 className="masthead-title">Federal Register Search</h1>
+        </div>
+        <div className="masthead-actions">
+          <button
+            className="icon-btn"
+            onClick={toggleInfo}
+            aria-label="about this app"
+          >
+            <HelpCircle size={20} />
+          </button>
+        </div>
+      </div>
+
+      {!!showInfo && (
+        <div className="info-banner">
+          Searching{" "}
           <a
             href="https://www.federalregister.gov/developers/documentation/api/v1#/Federal%20Register%20Documents/get_documents__format_"
             target="_blank"
             rel="noopener noreferrer"
           >
             federalregister.gov
-          </a>
-          <span> via </span>
+          </a>{" "}
+          via{" "}
           <a
             href="https://github.com/nomastickles/federal-register-search"
             target="_blank"
@@ -112,40 +68,18 @@ function Nav() {
           >
             github.com/nomastickles/federal-register-search
           </a>
-          <div className="nav-x-info nav-icon" onClick={infoToggle}>
-            <X width={questionSize} height={questionSize} />
-          </div>
-        </h3>
-      )}
-
-      {!showInfo && !currentTopicId && (
-        <div className="nav-question nav-icon" onClick={infoToggle}>
-          <HelpCircle width={questionSize} height={questionSize} />
+          .
+          <button
+            className="icon-btn info-banner-close"
+            onClick={toggleInfo}
+            aria-label="close info"
+          >
+            <X size={16} />
+          </button>
         </div>
       )}
-      {!!currentTopicId && !currentTopicEditId && (
-        <>
-          <div className="nav-edit nav-icon button-color" onClick={editToggle}>
-            <Edit width={iconSize} height={iconSize} />
-          </div>
-          <div className="nav-close nav-icon button-color" onClick={backToGrid}>
-            <BackIcon width={iconSize} height={iconSize} />
-          </div>
-        </>
-      )}
-
-      {!!currentTopicId && !!currentTopicEditId && (
-        <>
-          <div className="nav-edit nav-icon button-color" onClick={updateTopic}>
-            <Save width={iconSize} height={iconSize} />
-          </div>
-          <div className="nav-close nav-icon button-color" onClick={clearEdit}>
-            <BackIcon width={iconSize} height={iconSize} />
-          </div>
-        </>
-      )}
-    </div>
+    </>
   );
 }
 
-export default Nav;
+export default Masthead;

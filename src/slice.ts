@@ -1,7 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { SetStep, State, Step, Topic } from "./types";
-import { getTopicFromLocalStorage, setTopicLocalStorage } from "./utils";
-import { appName, topicDefaults } from "./constants";
+import {
+  getTopicFromLocalStorage,
+  getTopicIndex,
+  makeNewTopic,
+  removeTopicFromLocalStorage,
+  setTopicIndex,
+  setTopicLocalStorage,
+} from "./utils";
+import { appName, getTopicDefaults } from "./constants";
 
 const initialState: State = {
   stepMap: {},
@@ -17,11 +24,27 @@ const { actions, reducer } = createSlice({
     },
     updateTopic: (state, { payload }: PayloadAction<Topic>) => {
       const index = state.topics.findIndex((i) => i.id === payload.id);
+      if (index === -1) return;
       state.topics[index] = payload;
       setTopicLocalStorage(payload);
       state.stepMap[Step.TOPIC_EDIT] = undefined;
       state.stepMap[Step.TOPIC_UPDATE] = undefined;
-      // state.stepMap[Step.TOPIC_OPEN] = undefined;
+    },
+    addTopic: (state) => {
+      const topic = makeNewTopic();
+      state.topics.push(topic);
+      setTopicLocalStorage(topic);
+      setTopicIndex(state.topics.map((t) => t.id));
+      // jump straight into edit mode for the new topic
+      state.stepMap[Step.TOPIC_OPEN] = topic.id;
+      state.stepMap[Step.TOPIC_EDIT] = topic.id;
+    },
+    removeTopic: (state, { payload }: PayloadAction<number>) => {
+      state.topics = state.topics.filter((t) => t.id !== payload);
+      removeTopicFromLocalStorage(payload);
+      setTopicIndex(state.topics.map((t) => t.id));
+      state.stepMap[Step.TOPIC_OPEN] = undefined;
+      state.stepMap[Step.TOPIC_EDIT] = undefined;
     },
     setStepValue: (state, { payload }: PayloadAction<SetStep>) => {
       let newValue = payload.clearStep ? undefined : Date.now();
@@ -31,18 +54,24 @@ const { actions, reducer } = createSlice({
       state.stepMap[payload.step] = newValue;
     },
     init: (state) => {
-      state.topics = topicDefaults.map((i, index) => {
-        const localStorageVersion = getTopicFromLocalStorage(`${i.id}`);
-        if (!localStorageVersion) {
-          return topicDefaults[index];
-        }
+      const storedIndex = getTopicIndex();
 
-        return {
-          ...localStorageVersion,
-          illustrationColor: topicDefaults[index].illustrationColor,
-          backgroundColor: topicDefaults[index].backgroundColor,
-        };
+      if (!storedIndex || storedIndex.length === 0) {
+        // first run — seed with defaults and persist them
+        const defaults = getTopicDefaults();
+        state.topics = defaults;
+        defaults.forEach(setTopicLocalStorage);
+        setTopicIndex(defaults.map((t) => t.id));
+        return;
+      }
+
+      // rebuild topics from index + per-topic blobs; skip missing blobs
+      const rebuilt: Topic[] = [];
+      storedIndex.forEach((id) => {
+        const t = getTopicFromLocalStorage(id);
+        if (t) rebuilt.push(t);
       });
+      state.topics = rebuilt;
     },
   },
 });

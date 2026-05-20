@@ -1,147 +1,216 @@
 import React from "react";
-import { XCircle as Delete } from "react-feather";
-import { useForm } from "react-hook-form";
+import { X, Shuffle } from "react-feather";
 import { actions } from "../slice";
-import { Step, Topic, FormData } from "../types";
+import { Step, Topic } from "../types";
 import { useDispatch } from "../hooks/useDispatch";
 import { useAppState } from "../hooks/useAppState";
+import {
+  availableSections,
+  illustrationTypes,
+  accentPalette,
+} from "../constants";
+import { Illustration } from "./Illustrations";
 
-const sections = [
-  "business-and-industry",
-  "environment",
-  "health-and-public-welfare",
-  "science-and-technology",
-  "world",
-];
-
-const deleteIconSize = 22;
 /**
- * the form
+ * Phone-friendly chip-based topic editor.
  */
 function TopicForm({ topic }: { topic: Topic }) {
   const dispatch = useDispatch();
   const { stepMap } = useAppState();
-  const [newSections, setNewSections] = React.useState(topic.topicSections);
   const shouldUpdateTopic = stepMap[Step.TOPIC_UPDATE] === topic.id;
 
-  const { register, watch } = useForm<FormData>({
-    defaultValues: {
-      searchWords: topic.searchWords.join(","),
-      presidential: topic.presidential,
-    },
+  const [terms, setTerms] = React.useState<string[]>(topic.searchWords);
+  const [pendingTerm, setPendingTerm] = React.useState("");
+  const [sections, setSections] = React.useState<string[]>(topic.topicSections);
+  const [presidential, setPresidential] = React.useState<boolean>(
+    !!topic.presidential
+  );
+  const [illustrationType, setIllustrationType] = React.useState<string>(
+    topic.illustrationType
+  );
+  const [accentIndex, setAccentIndex] = React.useState<number>(() => {
+    const i = accentPalette.findIndex(
+      (a) => a.illustration === topic.illustrationColor
+    );
+    return i >= 0 ? i : 0;
   });
 
-  const formData = watch();
+  const activeAccent = accentPalette[accentIndex];
 
-  const addSection = React.useCallback(
-    (section: string) => {
-      if (newSections.includes(section)) {
-        return;
-      }
-
-      setNewSections((prev) => [...prev, section]);
-    },
-    [newSections]
-  );
-
-  const removeSection = React.useCallback((section: string) => {
-    setNewSections((prev) => prev.filter((i) => i !== section));
-  }, []);
-
-  React.useEffect(() => {
-    if (!shouldUpdateTopic) {
+  const addTerm = React.useCallback(() => {
+    const t = pendingTerm.trim();
+    if (!t) return;
+    if (terms.includes(t)) {
+      setPendingTerm("");
       return;
     }
-    const newItem = {
+    setTerms((prev) => [...prev, t]);
+    setPendingTerm("");
+  }, [pendingTerm, terms]);
+
+  const removeTerm = React.useCallback((t: string) => {
+    setTerms((prev) => prev.filter((x) => x !== t));
+  }, []);
+
+  const toggleSection = React.useCallback((s: string) => {
+    setSections((prev) =>
+      prev.includes(s) ? prev.filter((x) => x !== s) : [...prev, s]
+    );
+  }, []);
+
+  const cycleIllustration = React.useCallback(() => {
+    const i = illustrationTypes.indexOf(illustrationType);
+    const next = illustrationTypes[(i + 1) % illustrationTypes.length];
+    setIllustrationType(next);
+  }, [illustrationType]);
+
+  const shuffleLook = React.useCallback(() => {
+    // pick a different accent and a different illustration at random
+    setAccentIndex((current) => {
+      if (accentPalette.length <= 1) return current;
+      let next = current;
+      while (next === current) {
+        next = Math.floor(Math.random() * accentPalette.length);
+      }
+      return next;
+    });
+    setIllustrationType((current) => {
+      if (illustrationTypes.length <= 1) return current;
+      let next = current;
+      while (next === current) {
+        next = illustrationTypes[
+          Math.floor(Math.random() * illustrationTypes.length)
+        ];
+      }
+      return next;
+    });
+  }, []);
+
+  // when parent dispatches TOPIC_UPDATE we commit to redux + localStorage
+  React.useEffect(() => {
+    if (!shouldUpdateTopic) return;
+    // if there's an unsubmitted draft in the input, treat it as a term
+    const draft = pendingTerm.trim();
+    const finalTerms =
+      draft && !terms.includes(draft) ? [...terms, draft] : terms;
+    const newItem: Topic = {
       ...topic,
-      topicSections: newSections,
-      searchWords: formData.searchWords.split(",").map((i) => i.trim()),
-      presidential: formData.presidential,
+      topicSections: sections,
+      searchWords: finalTerms,
+      presidential,
+      illustrationType,
+      backgroundColor: activeAccent.background,
+      illustrationColor: activeAccent.illustration,
     };
-
     dispatch(actions.updateTopic(newItem));
-  }, [dispatch, formData, newSections, shouldUpdateTopic, topic]);
-
-  const availableSelections = sections.filter(
-    (section) => !newSections.includes(section)
-  );
+  }, [
+    shouldUpdateTopic,
+    terms,
+    pendingTerm,
+    sections,
+    presidential,
+    illustrationType,
+    activeAccent,
+    topic,
+    dispatch,
+  ]);
 
   return (
-    <>
-      <div className="nes is-rounded">
-        <p>Topic Edit</p>
+    <div className="topic-form">
+      {/* Illustration picker */}
+      <div className="illustration-picker">
+        <div
+          className="illustration-picker-preview"
+          style={{ background: activeAccent.background }}
+          onClick={cycleIllustration}
+        >
+          <Illustration
+            type={illustrationType}
+            color={activeAccent.illustration}
+            size={100}
+          />
+        </div>
+        <div className="illustration-picker-actions">
+          <div className="illustration-picker-name">{illustrationType}</div>
+          <div className="illustration-picker-hint">
+            tap to cycle illustration
+          </div>
+          <button
+            type="button"
+            className="illustration-picker-cycle"
+            onClick={shuffleLook}
+          >
+            <Shuffle size={12} /> shuffle
+          </button>
+        </div>
       </div>
 
-      <form className={"nes"} onSubmit={() => {}}>
-        <>
-          <section className="nes">
-            <label htmlFor="searchWords">Search Terms (comma separated)</label>
-            <div className="nes-field">
-              <textarea
-                className="nes-textarea"
-                style={{
-                  margin: "0 0 15px 0",
-                  width: "100%",
-                  maxWidth: "500px",
-                  minHeight: "80px",
-                  display: "block",
-                }}
-                {...register("searchWords", { required: true })}
-              />
+      {/* Search terms */}
+      <label className="form-label">Search terms</label>
+      <div className="chip-input">
+        {terms.map((t) => (
+          <span className="chip" key={t}>
+            {t}
+            <span
+              className="chip-x"
+              onClick={() => removeTerm(t)}
+              role="button"
+              aria-label={`remove ${t}`}
+            >
+              <X size={12} />
+            </span>
+          </span>
+        ))}
+        <input
+          className="chip-add-input"
+          value={pendingTerm}
+          placeholder={terms.length ? "add another…" : "type a term, then enter"}
+          onChange={(e) => setPendingTerm(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === ",") {
+              e.preventDefault();
+              addTerm();
+            } else if (e.key === "Backspace" && !pendingTerm && terms.length) {
+              setTerms((prev) => prev.slice(0, -1));
+            }
+          }}
+          onBlur={addTerm}
+        />
+      </div>
 
-              <label>
-                <input
-                  type="checkbox"
-                  className="is-dark"
-                  {...register("presidential")}
-                />
-                <span> Only search presidentially signed documents</span>
-              </label>
-            </div>
-          </section>
-          <section className="nes">
-            {/* <label htmlFor="sections">Section Focus</label> */}
-            {availableSelections.length > 0 && (
-              <div style={{ margin: "16px 0 0 0" }}>
-                <select value={""} onChange={(e) => addSection(e.target.value)}>
-                  <option value="" disabled>
-                    Target Search in...
-                  </option>
-                  {availableSelections.map((section) => {
-                    return (
-                      <option key={section} value={section}>
-                        {section}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-            )}
+      {/* Sections */}
+      <label className="form-label">Sections</label>
+      <div className="section-chips">
+        {availableSections.map((s) => {
+          const active = sections.includes(s);
+          return (
+            <button
+              type="button"
+              key={s}
+              className={`section-chip${active ? " is-active" : ""}`}
+              onClick={() => toggleSection(s)}
+            >
+              {s}
+            </button>
+          );
+        })}
+      </div>
 
-            <div style={{ margin: "20px 0 0 5px" }}>
-              {newSections.map((department) => {
-                return (
-                  <div
-                    style={{ margin: "0 0 10px 0", display: "inline-block" }}
-                    key={department}
-                  >
-                    <div style={{ margin: "0px 10px 0 0", float: "left" }}>
-                      <Delete
-                        width={deleteIconSize}
-                        height={deleteIconSize}
-                        onClick={() => removeSection(department)}
-                      />
-                    </div>
-
-                    <div style={{ float: "left" }}>{department}</div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-        </>
-      </form>
-    </>
+      {/* Presidential toggle */}
+      <label className="toggle-row">
+        <span>Presidential documents only</span>
+        <span className="toggle">
+          <input
+            type="checkbox"
+            checked={presidential}
+            onChange={(e) => setPresidential(e.target.checked)}
+          />
+          <span className="toggle-track">
+            <span className="toggle-thumb" />
+          </span>
+        </span>
+      </label>
+    </div>
   );
 }
 
