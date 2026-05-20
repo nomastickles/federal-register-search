@@ -20,29 +20,6 @@ If you want an agent to search the same data this app uses, install an existing 
 
 [**aml25/federal-register-mcp**](https://github.com/aml25/federal-register-mcp) — focused MCP server with tools for executive orders, presidential memoranda, proclamations, rules, agencies, and public-inspection documents. MIT, stdio + HTTP transports.
 
-```bash
-git clone https://github.com/aml25/federal-register-mcp.git
-cd federal-register-mcp
-npm install && npm run build
-```
-
-Then wire it into your client:
-
-**Claude Desktop** — `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
-
-```json
-{
-  "mcpServers": {
-    "federal-register": {
-      "command": "node",
-      "args": ["/absolute/path/to/federal-register-mcp/dist/server.js"]
-    }
-  }
-}
-```
-
-**Claude Code** — same JSON shape in your `.mcp.json` or via `claude mcp add federal-register -- node /absolute/path/to/federal-register-mcp/dist/server.js`.
-
 ### Alternatives
 
 - [**JamesANZ/us-legal-mcp**](https://github.com/JamesANZ/us-legal-mcp) — broader legal MCP that bundles Federal Register search alongside Congress.gov bills and CourtListener opinions.
