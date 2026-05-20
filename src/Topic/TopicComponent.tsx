@@ -1,4 +1,6 @@
 import React from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Topic } from "../types";
 import { Illustration } from "./Illustrations";
 import useTopicQuery from "../hooks/useTopicQuery";
@@ -25,9 +27,25 @@ export function TopicComponent({
   const lastUpdated = firstDoc?.publication_date;
   const lastUpdatedLabel = formatDate(lastUpdated);
 
+  // sortable wiring — long-press to lift, then drag to reorder
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: topic.id });
+
   const cardStyle = {
     ["--topic-bg" as any]: topic.backgroundColor,
     ["--topic-accent" as any]: topic.illustrationColor,
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 5 : undefined,
+    boxShadow: isDragging ? "0 14px 32px rgba(0,0,0,0.45)" : undefined,
+    opacity: isDragging ? 0.96 : 1,
+    touchAction: "manipulation",
   } as React.CSSProperties;
 
   // top meta row only emits chips/pills that actually exist
@@ -52,17 +70,24 @@ export function TopicComponent({
 
   return (
     <div
-      className="topic-card"
+      ref={setNodeRef}
+      className={`topic-card${isDragging ? " is-dragging" : ""}`}
       style={cardStyle}
-      onClick={onOpen}
-      role="button"
-      tabIndex={0}
+      onClick={() => {
+        if (isDragging) return;
+        onOpen();
+      }}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
+          // dnd-kit consumes space for drag activation via KeyboardSensor;
+          // if it didn't claim the event, treat it as a tap to open.
+          if (e.defaultPrevented) return;
           e.preventDefault();
           onOpen();
         }
       }}
+      {...attributes}
+      {...listeners}
     >
       <div className="topic-card-body">
         <div>

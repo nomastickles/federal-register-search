@@ -46,6 +46,19 @@ const { actions, reducer } = createSlice({
       state.stepMap[Step.TOPIC_OPEN] = undefined;
       state.stepMap[Step.TOPIC_EDIT] = undefined;
     },
+    reorderTopics: (state, { payload }: PayloadAction<number[]>) => {
+      // payload = new ordered list of topic ids
+      const lookup = new Map(state.topics.map((t) => [t.id, t]));
+      const reordered = payload
+        .map((id) => lookup.get(id))
+        .filter((t): t is Topic => !!t);
+      // include any topics not present in payload at the end (defensive)
+      state.topics.forEach((t) => {
+        if (!payload.includes(t.id)) reordered.push(t);
+      });
+      state.topics = reordered;
+      setTopicIndex(state.topics.map((t) => t.id));
+    },
     setStepValue: (state, { payload }: PayloadAction<SetStep>) => {
       let newValue = payload.clearStep ? undefined : Date.now();
       if (payload.value) {

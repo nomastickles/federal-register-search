@@ -808,3 +808,91 @@ textarea {
     font-size: 19px;
   }
 }
+
+/* =====================================================================
+   Card meta — pills, tags, "latest" eyebrow, count label
+   ===================================================================== */
+
+.topic-card-meta {
+  margin-bottom: 6px;
+}
+
+.meta-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg);
+  background: var(--accent-soft);
+  border: 0.5px solid rgba(201, 122, 90, 0.4);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.meta-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--fg-mute);
+  border: 0.5px solid var(--line-strong);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.topic-card-latest {
+  margin-top: 6px;
+}
+
+.topic-card-latest-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.topic-card-latest-sep {
+  color: var(--fg-dim);
+  opacity: 0.7;
+}
+
+.topic-card-latest-date {
+  color: var(--fg-mute);
+  letter-spacing: 0.04em;
+}
+
+.topic-card-count-row {
+  margin-top: auto;
+}
+
+.topic-card-count-label {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+}
+
+/* =====================================================================
+   Drag-and-drop reorder states
+   ===================================================================== */
+
+.topic-card {
+  /* allow normal scroll; the touch sensor lifts on long-press */
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.topic-card.is-dragging {
+  cursor: grabbing;
+  border-color: var(--accent);
+}
