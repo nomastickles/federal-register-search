@@ -36,6 +36,19 @@ function App() {
     dispatch(actions.init());
   }, [dispatch]);
 
+  // sync the browser tab title with the open topic (or app name at home)
+  React.useEffect(() => {
+    const base = "Federal Register Search";
+    if (openTopic && openTopic.searchWords.length > 0) {
+      document.title = `${openTopic.searchWords.join(" · ")} — ${base}`;
+    } else {
+      document.title = base;
+    }
+    return () => {
+      document.title = base;
+    };
+  }, [openTopic]);
+
   const onOpen = React.useCallback(
     (id: number) => {
       dispatch(actions.setStepValue({ step: Step.TOPIC_OPEN, value: id }));

@@ -45,6 +45,16 @@ export type Doc = {
   type: string;
   abstract: string;
   excerpts: string;
+  agencies?: Agency[];
+};
+
+export type Agency = {
+  id?: number;
+  name?: string;
+  raw_name?: string;
+  slug?: string;
+  url?: string;
+  parent_id?: number | null;
 };
 
 export type FormData = {

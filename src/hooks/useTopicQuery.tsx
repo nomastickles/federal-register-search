@@ -44,6 +44,18 @@ function useTopicQuery(topic: Topic, isOpen: boolean) {
         "conditions[sections]": topic.topicSections,
         "conditions[term]": termQuery,
         "conditions[type]": topic.presidential ? ["PRESDOCU"] : undefined,
+        // explicitly ask for the fields we render so agencies always
+        // come back (default field set varies)
+        "fields[]": [
+          "title",
+          "document_number",
+          "html_url",
+          "publication_date",
+          "type",
+          "abstract",
+          "excerpts",
+          "agencies",
+        ],
       };
 
       const results = await axios.get<TopicOpen>(url, { params });

@@ -1,7 +1,7 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Topic } from "../types";
+import { Agency, Topic } from "../types";
 import { Illustration } from "./Illustrations";
 import useTopicQuery from "../hooks/useTopicQuery";
 
@@ -119,6 +119,11 @@ export function TopicComponent({
                 )}
               </div>
               <div className="topic-card-preview">{firstDoc.title}</div>
+              {firstDoc.agencies && firstDoc.agencies.length > 0 && (
+                <div className="topic-card-agency">
+                  {agencyLabel(firstDoc.agencies)}
+                </div>
+              )}
             </div>
           )}
           {hasError && (
@@ -159,6 +164,16 @@ export function TopicComponent({
       )}
     </div>
   );
+}
+
+function agencyLabel(agencies: Agency[]): string {
+  const names = agencies
+    .map((a) => a.name || a.raw_name)
+    .filter((s): s is string => !!s);
+  if (names.length === 0) return "";
+  if (names.length === 1) return names[0];
+  if (names.length === 2) return `${names[0]} & ${names[1]}`;
+  return `${names[0]} & ${names.length - 1} more`;
 }
 
 function formatDate(raw?: string): string {

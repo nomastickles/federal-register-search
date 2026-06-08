@@ -5,6 +5,10 @@ function TopicComponentOpen({ info }: { info: TopicOpen }) {
   return (
     <div>
       {info.results?.map((doc) => {
+        const agencyNames = (doc.agencies || [])
+          .map((a) => a.name || a.raw_name)
+          .filter((s): s is string => !!s);
+
         return (
           <article className="doc-item" key={doc.document_number}>
             <div className="doc-eyebrow">
@@ -18,6 +22,16 @@ function TopicComponentOpen({ info }: { info: TopicOpen }) {
             </div>
 
             <h3 className="doc-title">{doc.title}</h3>
+
+            {agencyNames.length > 0 && (
+              <div className="doc-agencies">
+                {agencyNames.map((name) => (
+                  <span className="doc-agency-chip" key={name}>
+                    {name}
+                  </span>
+                ))}
+              </div>
+            )}
 
             {doc.abstract && <p className="doc-abstract">{doc.abstract}</p>}
 
